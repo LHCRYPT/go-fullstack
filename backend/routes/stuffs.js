@@ -1,11 +1,11 @@
 const express = require('express');
-const auth = require('../middleware/auth');
+const auth = require('../middleware/auth'); //pour importer ce middleware dans notre routeur
 const router = express.Router(); //on créé le routeur avec la méthode routeur d'express
 
 
 const stuffCtrl = require('../controllers/stuff'); //on importe stuff de controllers avec stuffCtrl
 
-router.post('/', auth, stuffCtrl.createThing);
+router.post('/', auth, stuffCtrl.createThing); //Dans notre routeur stuff, nous importons notre middleware et le passons comme argument aux routes à protéger
 router.put('/:id', auth, stuffCtrl.modifyThing);
 router.delete('/:id', auth, stuffCtrl.deleteThing);
 router.get('/:id', auth, stuffCtrl.getOneThing);
