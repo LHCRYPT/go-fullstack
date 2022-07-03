@@ -1,14 +1,15 @@
 const express = require('express');
-
+const auth = require('../middleware/auth');
 const router = express.Router(); //on créé le routeur avec la méthode routeur d'express
+
 
 const stuffCtrl = require('../controllers/stuff'); //on importe stuff de controllers avec stuffCtrl
 
-router.post('/', stuffCtrl.createThing);
-router.put('/:id', stuffCtrl.modifyThing);
-router.delete('/:id', stuffCtrl.deleteThing);
-router.get('/:id', stuffCtrl.getOneThing);
-router.get('/', stuffCtrl.getAllThings);//pour récupérer toutes les choses
+router.post('/', auth, stuffCtrl.createThing);
+router.put('/:id', auth, stuffCtrl.modifyThing);
+router.delete('/:id', auth, stuffCtrl.deleteThing);
+router.get('/:id', auth, stuffCtrl.getOneThing);
+router.get('/', auth, stuffCtrl.getAllThings);//pour récupérer toutes les choses
 
 module.exports = router; //on réexporte le routeur de ce fichier là
 

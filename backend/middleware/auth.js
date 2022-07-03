@@ -4,7 +4,7 @@ module.exports = (req, res, next) => { //nous exportons notre fonction middlewar
     try {
         const token = req.headers.authorization.split(' ')[1]; //pour récupérer notre token
         const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET'); //pour décoder le token + mot de passe avec jwt
-        const userId = decodedToken.userId;
+        const userId = decodedToken.userId; //on récupère sa propriété userId
         req.auth = {
             userId: userId
         };
