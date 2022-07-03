@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken'); //nous importons jsonwebtoken
 
-module.exports = (req, res, next) => {
+module.exports = (req, res, next) => { //nous exportons notre fonction middleware
     try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+        const token = req.headers.authorization.split(' ')[1]; //pour récupérer notre token
+        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET'); //pour décoder le token + mot de passe avec jwt
         const userId = decodedToken.userId;
         req.auth = {
             userId: userId
