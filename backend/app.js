@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express(); //pareil que bodyparser
 const mongoose = require('mongoose');
-
+const path = require('path'); //pour accéder au path de notre serveur 
 
 const Thing = require('./models/thing');
 
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 
 app.use('/api/stuff', stuffRoutes);
 app.use('/api/auth', userRoutes); //on enregistre le routeur lié à l'authentification
-/*app.use('/images', express.static(path.join(__dirname, 'images')));*/
+app.use('/images', express.static(path.join(__dirname, 'images'))); //ça indique à Express de gérer la ressource images de manière statique (un sous-répertoire de notre répertoire de base, __dirname) à chaque fois qu'elle reçoit une requête vers la route /images.
 
 module.exports = app;
 
