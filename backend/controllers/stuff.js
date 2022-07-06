@@ -33,9 +33,9 @@ exports.createThing = (req, res, next) => { //lié à la route post
   };*/
 
   exports.modifyThing = (req, res, next) => {  //lié à la route put
-    const thingObject = req.file ? {
-        ...JSON.parse(req.body.thing),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    const thingObject = req.file ? { //extraction de l'objet, on voit s'il y a un champ file
+        ...JSON.parse(req.body.thing), //s'il y a un champ file, on récupère l'objet en parsant la chaine de caractères
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` //on recrée l'url
     } : { ...req.body };
   
     delete thingObject._userId;
