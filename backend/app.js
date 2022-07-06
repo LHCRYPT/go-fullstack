@@ -28,6 +28,7 @@ app.use((req, res, next) => {
 
 app.use('/api/stuff', stuffRoutes);
 app.use('/api/auth', userRoutes); //on enregistre le routeur lié à l'authentification
+/*app.use('/images', express.static(path.join(__dirname, 'images')));*/
 
 module.exports = app;
 

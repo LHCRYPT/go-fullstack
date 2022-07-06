@@ -1,5 +1,5 @@
 const Thing = require('../models/thing'); //on importe le thing
-const fs = require('fs'); //??
+/*const fs = require('fs'); //??*/
 
 exports.createThing = (req, res, next) => {
     const thingObject = JSON.parse(req.body.thing); //objet envoyé en json parse
