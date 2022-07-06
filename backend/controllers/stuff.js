@@ -26,11 +26,33 @@ exports.createThing = (req, res, next) => { //lié à la route post
       .catch(error => res.status(400).json({ error })); //pour envoyer une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400, raccourci js (error)
   };*/
 
-  exports.modifyThing = (req, res, next) => { //lié à la route put
+  /*exports.modifyThing = (req, res, next) => {
     Thing.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id }) //pour modif un thing dans la base de donnée, 1er argument dans {} et 2ème argu dans {}
       .then(() => res.status(200).json({ message: 'Objet modifié !'}))
       .catch(error => res.status(400).json({ error }));
-  };
+  };*/
+
+  exports.modifyThing = (req, res, next) => {  //lié à la route put
+    const thingObject = req.file ? {
+        ...JSON.parse(req.body.thing),
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : { ...req.body };
+  
+    delete thingObject._userId;
+    Thing.findOne({_id: req.params.id})
+        .then((thing) => {
+            if (thing.userId != req.auth.userId) {
+                res.status(401).json({ message : 'Not authorized'});
+            } else {
+                Thing.updateOne({ _id: req.params.id}, { ...thingObject, _id: req.params.id})
+                .then(() => res.status(200).json({message : 'Objet modifié!'}))
+                .catch(error => res.status(401).json({ error }));
+            }
+        })
+        .catch((error) => {
+            res.status(400).json({ error });
+        });
+ };
 
   exports.deleteThing = (req, res, next) => {
     Thing.deleteOne({ _id: req.params.id })
