@@ -1,13 +1,13 @@
 const multer = require('multer'); //on importe multer
 
-const MIME_TYPES = { //on crée un objet de configuration pour mulder
+const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',
   'image/png': 'png'
 };
 
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
+const storage = multer.diskStorage({ // on crée un objet de configuration pour mulder et on l'enregistre sur le disque
+  destination: (req, file, callback) => { // dit dans quel dossier enregistrer les fichiers
     callback(null, 'images');
   },
   filename: (req, file, callback) => {
