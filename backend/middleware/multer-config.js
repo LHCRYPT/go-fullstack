@@ -7,7 +7,7 @@ const MIME_TYPES = {
 };
 
 const storage = multer.diskStorage({ // on crée un objet de configuration pour mulder et on l'enregistre sur le disque
-  destination: (req, file, callback) => { // dit dans quel dossier enregistrer les fichiers
+  destination: (req, file, callback) => { // dit dans quel dossier enregistrer les fichiers, il y a 3 arguments : req file callback
     callback(null, 'images');
   },
   filename: (req, file, callback) => {
