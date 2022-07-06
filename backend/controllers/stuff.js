@@ -1,7 +1,7 @@
 const Thing = require('../models/thing'); //on importe le thing
 const fs = require('fs'); //??
 
-exports.createThing = (req, res, next) => {
+exports.createThing = (req, res, next) => { //lié à la route post
     const thingObject = JSON.parse(req.body.thing); //objet envoyé en json parse
     delete thingObject._id; //on supprime dans cet objet le champ id car il sera généré automatiquement par notre base de donnée
     delete thingObject._userId; //on supprime dans cet objet le champ userid qui correspond à la personne qui a créée l'objet car nous ne voulons pas faire confiance au client, on utilisera l'id venant du token d'authentification
@@ -26,7 +26,7 @@ exports.createThing = (req, res, next) => {
       .catch(error => res.status(400).json({ error })); //pour envoyer une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400, raccourci js (error)
   };*/
 
-  exports.modifyThing = (req, res, next) => {
+  exports.modifyThing = (req, res, next) => { //lié à la route put
     Thing.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id }) //pour modif un thing dans la base de donnée, 1er argument dans {} et 2ème argu dans {}
       .then(() => res.status(200).json({ message: 'Objet modifié !'}))
       .catch(error => res.status(400).json({ error }));
