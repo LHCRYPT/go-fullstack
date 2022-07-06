@@ -1,8 +1,22 @@
-// in controllers/stuff.js
-
 const Thing = require('../models/thing'); //on importe le thing
+const fs = require('fs'); //??
 
-exports.createThing = (req, res, next) => { // Placer la route POST au-dessus interceptera les requêtes POST, en les empêchant d'atteindre le middleware GET
+exports.createThing = (req, res, next) => {
+    const thingObject = JSON.parse(req.body.thing); //objet envoyé en json parse
+    delete thingObject._id; //on supprime dans cet objet le champ id car il sera généré automatiquement par notre base de donnée
+    delete thingObject._userId; //on supprime dans cet objet le champ userid qui correspond à la personne qui a créée l'objet car nous ne voulons pas faire confiance au client, on utilisera l'id venant du token d'authentification
+    const thing = new Thing({
+        ...thingObject,
+        userId: req.auth.userId,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    });
+  
+    thing.save()
+    .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
+    .catch(error => { res.status(400).json( { error })})
+ };
+
+/*exports.createThing = (req, res, next) => { // Placer la route POST au-dessus interceptera les requêtes POST, en les empêchant d'atteindre le middleware GET
     delete req.body._id; //on supprime l'id qui était dans le champs du body dans le frontend, il est faux + généré par MongonDB automatiquement
     const thing = new Thing({
       ...req.body //raccourci JS (opérateur spread) qui copie tous les éléments de req.body (title...)
@@ -10,7 +24,7 @@ exports.createThing = (req, res, next) => { // Placer la route POST au-dessus in
     thing.save() //pour enregistrer thing/l'objet dans la base de donnée, la méthode save() renvoie une Promise
       .then(() => res.status(201).json({ message: 'Objet enregistré !'})) //Promise (then)pour envoyer une réponse de réussite avec un code 201 de réussite au frontend, sinon expiration de la requête
       .catch(error => res.status(400).json({ error })); //pour envoyer une réponse avec l'erreur générée par Mongoose ainsi qu'un code d'erreur 400, raccourci js (error)
-  };
+  };*/
 
   exports.modifyThing = (req, res, next) => {
     Thing.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id }) //pour modif un thing dans la base de donnée, 1er argument dans {} et 2ème argu dans {}

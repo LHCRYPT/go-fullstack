@@ -1,4 +1,4 @@
-const multer = require('multer'); //on importe multer
+const multer = require('multer'); //on importe multer (qui est un package de gestion de fichiers)
 
 const MIME_TYPES = { //dictionnaire
   'image/jpg': 'jpg',
@@ -6,7 +6,7 @@ const MIME_TYPES = { //dictionnaire
   'image/png': 'png'
 };
 
-const storage = multer.diskStorage({ // on crée un objet de configuration pour mulder et on l'enregistre sur le disque
+const storage = multer.diskStorage({ // on crée un objet de configuration pour mulder et on l'enregistre sur le disque, méthode diskStorage()  configure le chemin et le nom de fichier pour les fichiers entrants
   destination: (req, file, callback) => { // destination dit à multer d'enregistrer les fichiers dans le dossier images, il y a 3 arguments : req file callback
     callback(null, 'images'); //on appelle le call back; null pour dire qu'il n'y a pas eu d'erreur à ce niveau là, dossier image en 2ème argument
   },
