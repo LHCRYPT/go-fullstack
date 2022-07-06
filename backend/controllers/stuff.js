@@ -5,13 +5,13 @@ exports.createThing = (req, res, next) => {
     const thingObject = JSON.parse(req.body.thing); //objet envoyé en json parse
     delete thingObject._id; //on supprime dans cet objet le champ id car il sera généré automatiquement par notre base de donnée
     delete thingObject._userId; //on supprime dans cet objet le champ userid qui correspond à la personne qui a créée l'objet car nous ne voulons pas faire confiance au client, on utilisera l'id venant du token d'authentification
-    const thing = new Thing({
+    const thing = new Thing({ //on créé notre objet sans les 2 champs supprimés
         ...thingObject,
-        userId: req.auth.userId,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        userId: req.auth.userId, //on extrait les userid de l'objet requête grâce au middleware
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` //on génère l'url de l'image
     });
   
-    thing.save()
+    thing.save() //on enregistre l'objet dans la base de donnée avec save
     .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
     .catch(error => { res.status(400).json( { error })})
  };
