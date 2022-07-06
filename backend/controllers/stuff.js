@@ -36,12 +36,12 @@ exports.createThing = (req, res, next) => { //lié à la route post
     const thingObject = req.file ? { //extraction de l'objet, on voit s'il y a un champ file
         ...JSON.parse(req.body.thing), //s'il y a un champ file, on récupère l'objet en parsant la chaine de caractères
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` //on recrée l'url
-    } : { ...req.body };
+    } : { ...req.body }; //s'il n'y a pas d'objet transmis,on récupère l'objet directement dans le corps de la requête
   
-    delete thingObject._userId;
-    Thing.findOne({_id: req.params.id})
-        .then((thing) => {
-            if (thing.userId != req.auth.userId) {
+    delete thingObject._userId; // suppression d'userTId pour éviter que qq'un crée un objet à son nom puis le modifie pour le réassigner à quelqu'un d'autre
+    Thing.findOne({_id: req.params.id}) //on récupère l'objet dans la base de donnée 
+        .then((thing) => { 
+            if (thing.userId != req.auth.userId) { //pour vérifier si c'est bien l'utilisateur à qui appartient cet objet qui cherche à le modifier (est ce que userId de la base est pareil que l'userId du token?)
                 res.status(401).json({ message : 'Not authorized'});
             } else {
                 Thing.updateOne({ _id: req.params.id}, { ...thingObject, _id: req.params.id})
