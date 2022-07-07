@@ -34,21 +34,21 @@ exports.createThing = (req, res, next) => { //lié à la route post
 
   exports.modifyThing = (req, res, next) => {  //lié à la route put
     const thingObject = req.file ? { //extraction de l'objet, on voit s'il y a un champ file
-        ...JSON.parse(req.body.thing), //s'il y a un champ file, on récupère l'objet en parsant la chaine de caractères
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` //on recrée l'url
+        ...JSON.parse(req.body.thing), //s'il y a un champ file, on récupère l'objet en parsant la chaine de caractères, transforme un objet stringifié en Object JavaScript exploitable
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` //on recrée l'url, besoin dereq.protocol  et de req.get('host'), connectés par  '://'  et suivis de req.file.filename, pour reconstruire l'URL complète du fichier enregistré
     } : { ...req.body }; //s'il n'y a pas d'objet transmis,on récupère l'objet directement dans le corps de la requête
   
     delete thingObject._userId; // suppression d'userTId pour éviter que qq'un crée un objet à son nom puis le modifie pour le réassigner à quelqu'un d'autre
     Thing.findOne({_id: req.params.id}) //on récupère l'objet dans la base de donnée 
         .then((thing) => { 
-            if (thing.userId != req.auth.userId) { //pour vérifier si c'est bien l'utilisateur à qui appartient cet objet qui cherche à le modifier (est ce que userId de la base est pareil que l'userId du token?)
-                res.status(401).json({ message : 'Not authorized'});
-            } else {
-                Thing.updateOne({ _id: req.params.id}, { ...thingObject, _id: req.params.id})
-                .then(() => res.status(200).json({message : 'Objet modifié!'}))
-                .catch(error => res.status(401).json({ error }));
+            if (thing.userId != req.auth.userId) { //pour vérifier si c'est bien l'utilisateur à qui appartient cet objet qui cherche à le modifier (est ce que userId de la base est différent de l'userId du token?)
+                res.status(401).json({ message : 'Not authorized'}); //si c'est non, message négatif
+            } else { //si c'est bon
+                Thing.updateOne({ _id: req.params.id}, { ...thingObject, _id: req.params.id})  //mettre à jour notre enregistrement ave le filtre+quel objet+ce qu'est récup dans le corps de la fonction+ id paramètre de URL
+                .then(() => res.status(200).json({message : 'Objet modifié!'})) // si c'est bon, message de succès
+                .catch(error => res.status(401).json({ error })); //si non, on renvoie error
             }
-        })
+      })
         .catch((error) => {
             res.status(400).json({ error });
         });
