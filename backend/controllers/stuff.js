@@ -1,6 +1,7 @@
 const Thing = require('../models/thing'); //on importe le thing
 const fs = require('fs'); //??
 
+
 exports.createThing = (req, res, next) => { //lié à la route post
     const thingObject = JSON.parse(req.body.thing); //objet envoyé en json parse
     delete thingObject._id; //on supprime dans cet objet le champ id car il sera généré automatiquement par notre base de donnée
