@@ -46,7 +46,7 @@ exports.createThing = (req, res, next) => { //lié à la route post
                 res.status(401).json({message: 'Not authorized'});
             } else {
                 const filename = thing.imageUrl.split('/images/')[1]; //Nous utilisons le fait de savoir que notre URL d'image contient un segment /images/ pour séparer le nom de fichier
-                fs.unlink(`images/${filename}`, () => {
+                fs.unlink(`images/${filename}`, () => { //Nous utilisons ensuite la fonction unlink du package fs pour supprimer ce fichier, en lui passant le fichier à supprimer et le callback à exécuter une fois ce fichier supprimé
                     Thing.deleteOne({_id: req.params.id})
                         .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
                         .catch(error => res.status(401).json({ error }));
